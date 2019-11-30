@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="ERROR" strict="true" name="XMLConfigTest"
+               packages="">
+    <Properties>
+        <Property name="filename">target/test.log</Property>
+        <Property name="rollingfilename">target/logs/app.log</Property>
+    </Properties>
+    <!-- <Filter type="ThresholdFilter" level="ERROR"/> -->
+    <Appenders>
+        <Appender type="Console" name="STDOUT">
+            <Layout type="PatternLayout" pattern="%d{HH:mm:ss.SSS} |%-5p | %-15c{1} | %m%n"/>
+        </Appender>
+        <Appender type="File" name="File" fileName="${filename}" append="false">
+            <Layout type="PatternLayout">
+                <Pattern>%d{HH:mm:ss.SSS}| %-5p | %-15c{1} | %m%n</Pattern>
+            </Layout>
+        </Appender>
+        <RollingFile name="RollingFile" fileName="${rollingfilename}"
+                     filePattern="target/logs/$${date:yyyy-MM}/app-%d{MM-dd-yyyy}-%i.log.gz">
+            <PatternLayout>
+                <pattern>%d %p %c{1.} [%t] %m%n</pattern>
+            </PatternLayout>
+            <Policies>
+               <!-- <OnStartupTriggeringPolicy/> -->
+               <TimeBasedTriggeringPolicy/>
+               <SizeBasedTriggeringPolicy size="1KB"/>
+            </Policies>
+        </RollingFile>
+    </Appenders>
+    <Loggers>
+        <Logger name="com.bext.Scheduler" level="TRACE" additivity="false">
+            <AppenderRef ref="STDOUT"/>
+        </Logger>
+        <Logger name="com.bext.Scheduler" level="TRACE" additivity="false">
+            <AppenderRef ref="RollingFile"/>
+        </Logger>
+        <Logger name="com.bext.ServiceA" level="DEBUG" additivity="false">
+            <AppenderRef ref="File"/>
+        </Logger>
+        <Root level="ERROR">
+            <AppenderRef ref="STDOUT"/>
+        </Root>
+    </Loggers>
+</Configuration>

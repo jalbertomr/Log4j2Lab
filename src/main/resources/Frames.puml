@@ -1,0 +1,59 @@
+    @startuml
+    hide stereotype
+    ''skinparam linetype ortho
+    skinparam rectangle {
+        roundCorner<<interruptable>> 25
+        roundCorner<<start>> 25
+        roundCorner<<process>> 10
+
+        backgroundColor<<start>> black
+    }
+    skinparam shadowing false
+
+    sprite $interruptzigzag [16x16/16] {
+    0000000000000000
+    0000000000000000
+    0000000000000000
+    0000000000000000
+    000FFFFFFFFFFF00
+    000000000000F000
+    00000000000F0000
+    0000000000F00000
+    000000000F000F00
+    00000000F00000F0
+    0000000FFFFFFFFF
+    00000000000000F0
+    0000000000000F00
+    0000000000000000
+    0000000000000000
+    0000000000000000
+    }
+
+    frame "ad Interruptable Activity Region" {
+
+    rectangle " " <<interruptable>> #line.dashed {
+            rectangle "Process Order" as process <<process>>
+            rectangle "Cancel Request" as cancelreq
+    }
+
+    rectangle "Close Order" as close <<process>>
+
+    rectangle "Cancel Order" as cancel <<process>>
+
+    process -right-> close
+
+    start -down-> process
+
+    close -> end
+
+    cancel --> end
+
+    cancelreq -> cancel: <$interruptzigzag>
+
+    '' layout
+
+    cancelreq -[hidden]down-> process
+
+    }
+
+    @enduml

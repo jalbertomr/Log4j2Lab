@@ -1,0 +1,44 @@
+Configuration:
+  status: debug
+  name: YAMLConfigTest
+  properties:
+    property:
+      name: filename
+      value: target/test-yaml.log
+  thresholdFilter:
+    level: trace
+  appenders:
+    Console:
+      name: STDOUT
+      PatternLayout:
+        Pattern: "%d{HH:mm:ss.SSS} |%-5p | %-15c{1} | %m%n"
+    File:
+      name: File
+      fileName: ${filename}
+      PatternLayout:
+        Pattern: "%d %p %C{1.} [%t] %m%n"
+      Filters:
+        ThresholdFilter:
+          level: trace
+  Loggers:
+    logger:
+
+      name: org.apache.logging.log4j.test1
+      level: debug
+      additivity: false
+      ThreadContextMapFilter:
+        KeyValuePair:
+          key: test
+          value: 123
+      AppenderRef:
+        ref: STDOUT
+
+      name: com.bext
+      level: debug
+      additivity: false
+      AppenderRef:
+        ref: File
+    Root:
+      level: trace
+      AppenderRef:
+        ref: STDOUT

@@ -1,0 +1,58 @@
+@startuml
+interface Configuration
+interface "Filter"
+interface " Filter"
+interface "  Filter"
+
+interface Logger
+interface Appender
+
+interface Layout
+interface StrLookup
+interface LogEvent
+
+
+class StrSubstitutor
+
+class LoggerContext
+
+interface Logger
+class LoggerConfig
+
+
+LoggerContext "1" -> "1" Configuration:has active
+LoggerContext "1" o--> "0..*" Logger:contains
+
+Logger "0..*" -> "1" LoggerConfig:asociates
+Configuration "1" -> "1" StrSubstitutor:references
+
+Configuration "1" o--> "1..*" LoggerConfig:contains
+Configuration "1" o-up-> "0..*" "  Filter":contains
+
+StrSubstitutor "1" o-up-> "1..*" StrLookup:"evaluate variables"
+LoggerConfig "0..*" -right-> "0..*" Appender:contains
+LoggerConfig "1" o--> "0..*" Filter:contains
+
+Appender "1" o--> "0..*" " Filter":contains
+Appender - Layout:asociates
+Appender --> LogEvent:deliver
+
+LogEvent <-down- Layout:format
+
+Filter --() LogEvent:filters
+" Filter" --() LogEvent:filters
+"  Filter" -() LogEvent:filters
+
+
+enum StandardLevel {
+ALL
+TRACE
+DEBUG
+INFO
+WARN
+ERROR
+FATAL
+OFF
+}
+
+@enduml

@@ -1,0 +1,48 @@
+@startuml
+
+:Application to be logged;
+start
+partition Configuration
+
+fork
+
+:Log4J2 Events;
+partition Filter {
+:status="FATAL"]
+}
+fork again
+partition Properties {
+:filename=target/test.log]
+}
+:App LogEvent;
+partition "Filter 1 (type, level)" {
+}
+partition "Filter ...N (type, level)" {
+}
+
+end fork
+partition Appenders {
+ note :Appender1 type, name..\n  Layout..\n  Filter..\nAppender..N type, name..\n  Layout..\n  Filter..
+}
+
+fork
+partition "logger Root: level" {
+note right: refers to appender
+:appenderRef 1->;
+:"appenderRef ..N"->;
+}
+
+fork again
+partition "logger1 name, level" {
+:appenderRef 1->;
+:appenderRef ..N"->;
+}
+fork again
+partition "logger..N name, level"{
+:appenderRef 1->;
+:appenderRef ..N"->;
+
+}
+end fork
+stop
+@enduml

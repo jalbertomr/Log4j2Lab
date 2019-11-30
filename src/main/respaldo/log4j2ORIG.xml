@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="debug" strict="true" name="XMLConfigTest"
+               packages="com.bext">
+    <Properties>
+        <Property name="filename">target/test.log</Property>
+    </Properties>
+    <Filter type="ThresholdFilter" level="trace"/>
+    <Appenders>
+        <Appender type="Console" name="STDOUT">
+            <Layout type="PatternLayout" pattern="%d{HH:mm:ss.SSS} |%-5p | %-15c{1} | %m%n"/>
+            <Filters>
+                <Filter type="MarkerFilter" marker="FLOW" onMatch="DENY" onMismatch="NEUTRAL"/>
+                <Filter type="MarkerFilter" marker="EXCEPTION" onMatch="DENY" onMismatch="ACCEPT"/>
+            </Filters>
+            <Async name="ASYNC">
+                <AppenderRef ref="ASYNC_STDOUT"/>
+            </Async>
+        </Appender>
+        <Appender type="Console" name="FLOW">
+            <Layout type="PatternLayout" pattern="%d{HH:mm:ss.SSS} |%-5p | %-15c{1} | %m%n"/>
+            <Filters>
+                <Filter type="MarkerFilter" marker="FLOW" onMatch="DENY" onMismatch="NEUTRAL"/>
+                <Filter type="MarkerFilter" marker="EXCEPTION" onMatch="DENY" onMismatch="ACCEPT"/>
+            </Filters>
+        </Appender>
+        <Appender type="File" name="File" fileName="${filename}" append="false">
+            <Layout type="PatternLayout">
+                <Pattern>%d{HH:mm:ss.SSS}| %-5p | %-15c{1} | %m%n</Pattern>
+            </Layout>
+        </Appender>
+    </Appenders>
+    <Loggers>
+        <Logger name="com.bext.Scheduler" level="trace" additivity="false">
+            <ThreadContextMapFilter level="all">
+                <KeyValuePair key="test" value="123"></KeyValuePair>
+            </ThreadContextMapFilter>
+            <AppenderRef ref="STDOUT"/>
+            <!-- <AppenderRef ref="ASYNC_STDOUT"/> -->
+        </Logger>
+        <Logger name="com.bext" level="trace" additivity="false">
+            <AppenderRef ref="File"/>
+        </Logger>
+        <Root level="error">
+             <AppenderRef ref="STDOUT"/>
+             <AppenderRef ref="File"/>
+        </Root>
+    </Loggers>
+</Configuration>
